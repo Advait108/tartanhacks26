@@ -13,7 +13,7 @@
     
     body{
         width: 100vw;
-        height: 100dvh;
+        min-height: 100dvh;
         display: flex; 
         flex-direction: column;
         overflow: hidden;
@@ -26,7 +26,7 @@
     }
 
     #app-title{
-        margin-top: 2.2rem;
+        margin-top: 0.5rem;
         letter-spacing: -0.02em;
         font-weight: 900;
     }
@@ -68,7 +68,7 @@
 
     .cardWrap{
         width: 100%;
-        height: 30rem;
+        height: auto;
         display:flex;
         align-items:center;
         justify-content:center;
@@ -117,7 +117,6 @@
 
     #feedback {                                                                                      
         display:inline-block;
-        margin: 0.5rem auto 0;
         padding: 0.625rem 1rem;
         border-radius: 999px;
         font-weight: 900;
@@ -145,22 +144,31 @@
     }
 
     .tag {
-        background: rgba(255, 255, 255, 0.25);
         padding: 4px 10px;
         border-radius: 20px;
         font-size: 0.75rem;
-        font-weight: 500;
+        font-weight: 600;
+    }
+
+    .tag-green {
+        background: rgba(76, 175, 80, 0.2);
+        color: #2e7d32;
+    }
+
+    .tag-red {
+        background: rgba(233, 69, 96, 0.2);
+        color: #c0392b;
     }
 
     .card-buttons {
         display: flex;
-        gap: 24px;
-        margin-top: 16px;
+        gap: 1.5rem;
+        margin-bottom: 0.625rem;
     }
 
     .card-btn {
-        width: 56px;
-        height: 56px;
+        width: 3.5rem;
+        height: 3.5rem;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -171,6 +179,7 @@
         box-shadow: 0 4px 12px rgba(18, 48, 31, 0.12);
         cursor: pointer;
         transition: transform 0.15s;
+        margin: 0.625rem 0;
     }
 
     .card-btn:active {
@@ -182,14 +191,70 @@
     }
 
     .btn-heart {
-        color: #27ae60;
+        color: #6db86d;
+    }
+
+    /* "It's a Match!" animation styles */
+    #matchOverlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(46, 125, 50, 0.15);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 50;
+    }
+
+    #matchOverlay.show {
+        opacity: 1;
+    }
+
+    .match-text {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #fff;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+        letter-spacing: -0.02em;
+    }
+
+    .match-hearts {
+        display: flex;
+        gap: 16px;
+    }
+
+    .float-heart {
+        font-size: 1.5rem;
+        opacity: 0;
+    }
+
+    #matchOverlay.show .float-heart {
+        animation: floatUp 0.8s ease forwards;
+    }
+
+    #matchOverlay.show .float-heart:nth-child(1) { animation-delay: 0s; }
+    #matchOverlay.show .float-heart:nth-child(2) { animation-delay: 0.15s; }
+    #matchOverlay.show .float-heart:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes floatUp {
+        0%   { opacity: 0; transform: translateY(20px) scale(0.5); }
+        40%  { opacity: 1; transform: translateY(-10px) scale(1.1); }
+        100% { opacity: 0; transform: translateY(-40px) scale(0.8); }
     }
 
 </style>
+
 <body>
     <h1 id="app-title">Compost Cupid</h1>
     <p class = "subtitle">You've been matched with a bin: swipe right on items that belong and left on the rest!</p>
-    <div class="chips">
+    <div class= "chips">
         <div class="chip"><span class="label">Bin:</span> <span class="value" id="binLabel"></span></div>
         <div class="chip"><span class="label">Score:</span> <span class="value" id="scoreNum">0</span></div>
         <div class="chip"><span class="label">Streak:</span> <span class="value" id="streakNum">0</span></div>
@@ -207,6 +272,16 @@
         <div class="card-btn btn-heart">❤</div>
     </div>
     <div id="feedback" class="neutral">Swipe to start 💚</div>
+
+    <!-- "It's a Match!" animation -->
+    <div id="matchOverlay">
+        <div class="match-text">It's a Match!</div>
+        <div class="match-hearts">
+            <span class="float-heart">💚</span>
+            <span class="float-heart">💚</span>
+        </div>
+    </div>
+
     <script>
         //BIN + ITEM CHOOSING LOGIC------------------------------------------
         const items = [
@@ -246,8 +321,18 @@
             currItem = items[randomIndex];
             cardEmoji.textContent = currItem.emoji;
             cardName.textContent = currItem.name;
-            cardTags.innerHTML = currItem.tags.map(t => `<span class="tag">${t}</span>`).join('');
+            cardTags.innerHTML = currItem.tags.map((t, i) => `<span class="tag ${i < 2 ? 'tag-green' : 'tag-red'}">${t}</span>`).join('');
             card.style.transform = ''; //reset card position for next item
+        }
+
+        //"IT'S A MATCH!" ANIMATION------------------------------------------------------
+        let matchOverlay = document.getElementById('matchOverlay');
+
+        function showMatch() { // shows "It's a Match!" animation
+            matchOverlay.classList.add('show');
+            setTimeout(() => {
+                matchOverlay.classList.remove('show');
+            }, 900); // visible for 0.9 seconds
         }
 
         //SWIPING LOGIC------------------------------------------------------
@@ -261,6 +346,7 @@
                 score++;
                 streak++;
                 feedbackEl.textContent = 'Correct!';
+                if (swipedRight) showMatch(); // "It's a Match!" animation on correct right swipes
             } else {
                 streak = 0;
                 feedbackEl.textContent = 'Wrong! It was ' + currItem.bin;

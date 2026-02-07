@@ -811,6 +811,9 @@
 
         //START SCREEN------------------------------------------------------
         document.getElementById('startBtn').addEventListener('click', () => {
+            // unlock audio on mobile — browsers require a user tap before sound can play
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             document.getElementById('startScreen').classList.add('hidden');
             startTimer();
         });

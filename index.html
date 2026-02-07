@@ -4,8 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compost Cupid</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
 </head>
+<style>
+    *{
+        margin: 0px;
+        height: 100%;
+    }
+    body{
+        display: flex; 
+        align-items: center;
+        justify-content: center;
+        background-image: linear-gradient(0deg, rgb(209, 236, 207), rgb(69, 87, 69));
+        color: white;
+        font-family: "Poppins", sans-serif
+    }
+    #app-title{
+        margin-top: 2.5rem;
+    }
+</style>
 <body>
+    <h1 id="app-title">Compost Cupid</h1>
     <div id="info">You are the <span id="binLabel"></span> bin</div>  <!-- where the bin is displayed -->
     <div id="card"> <!-- where the item is displayed -->
       <div id="cardEmoji"></div>
@@ -35,8 +56,6 @@
         }
         let currBin = getNewBin(); //current bin that a player is assigned to
 
-
-
         let currItem = null;
         let binLabel = document.getElementById('binLabel'); //going into HTML and getting references to elements
         let cardEmoji = document.getElementById('cardEmoji');
@@ -50,7 +69,7 @@
         }
 
         //SWIPING LOGIC------------------------------------------------------
-        let feedbackEl = document.getElementById('feedback');//points to feedback element in HTML  
+        let feedbackEl = document.getElementById('feedback');//points to feedback element in HTML
         let scoreEl = document.getElementById('scoreDisplay');//points to score display element in HTML
 
         function perSwipe(swipedRight) {
@@ -69,12 +88,10 @@
 
         let startX = 0;
         let card = document.getElementById('card');//points to HTML card
-        
-
 
         card.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;   //touch[0] is first finger that touched screen, 
-                                            // clientX is horizontal position of that touch                                                         
+            startX = e.touches[0].clientX;   //touch[0] is first finger that touched screen,
+                                            // clientX is horizontal position of that touch
         });
 
         card.addEventListener('touchend', (e) => { //constantly listening
@@ -85,26 +102,18 @@
             else if (diff < -50) perSwipe(false); // swiped left
         });
 
-
-        // mouse events for desktop testing (Can be faded later)                                                             
-        card.addEventListener('mousedown', (e) => { startX = e.clientX; });                              
-        card.addEventListener('mouseup', (e) => {                   
+        // mouse events for desktop testing (Can be faded later)
+        card.addEventListener('mousedown', (e) => { startX = e.clientX; });
+        card.addEventListener('mouseup', (e) => {
             let diff = e.clientX - startX;
             if (diff > 50) perSwipe(true);
             else if (diff < -50) perSwipe(false);
         });
-        
-
-
 
         //INITIALIZING STUFF------------------------------------------------------
         binLabel.textContent = currBin;
         showNextItem();
 
     </script>
-    
-
-
-
 </body>
 </html>

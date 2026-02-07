@@ -76,7 +76,6 @@
         transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
-
     .bar {
         display: flex;
         flex-direction: row;
@@ -97,8 +96,10 @@
     <h1 id="app-title">Compost Cupid</h1>
     <p>You've been matched with a bin: swipe right on items that belong and left on the rest!</p>
     <div class="bar">
-        <div><span class="bold-text">Bin: </span><span id="binLabel"></span></div>
-        <div id="scoreDisplay"><span class="bold-text">Score:</span> 0 | <span class="bold-text">Streak:</span> 0</div>
+        <div id="scoreDisplay">
+            <span class="bold-text">Bin: </span><span id="binLabel"></span>
+            | <span class="bold-text">Score:</span> 0 | <span class="bold-text">Streak:</span> 0
+        </div>
     </div>
     <div id="card"> <!-- where the item is displayed -->
         <div id="cardEmoji"></div>

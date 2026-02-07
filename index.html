@@ -6,6 +6,94 @@
     <title>Compost Cupid</title>
 </head>
 <body>
+    <div id="info">You are the <span id="binLabel"></span> bin</div>  <!-- where the bin is displayed -->
+    <div id="card"> <!-- where the item is displayed -->
+      <div id="cardEmoji"></div>
+      <div id="cardName"></div>
+    </div>
+    <script>
+        //BIN + ITEM CHOOSING LOGIC------------------------------------------
+        const items = [
+            { emoji: '📦', name: 'Cardboard Box', bin: 'recycle' },
+            { emoji: '🍌', name: 'Banana Peel', bin: 'compost' },
+            { emoji: '🪥', name: 'Used Toothbrush', bin: 'trash' },
+            { emoji: '🍕', name: 'Greasy Pizza Box', bin: 'trash' },
+            { emoji: '🥫', name: 'Tomato Can', bin: 'recycle' },
+            { emoji: '☕', name: 'Ground Coffee', bin: 'compost' },
+        ];
+        let score = 0;
+        let streak = 0;
+
+        const bins = ['recycle', 'compost', 'trash'];//what bins can players be?
+
+        function getNewBin(){ //pick a random bin at start of game
+            let randomIndex = Math.floor(Math.random() * bins.length);
+            let chosenBin = bins[randomIndex];
+            return chosenBin;
+        }
+        let currBin = getNewBin(); //current bin that a player is assigned to
+
+
+
+        let currItem = null;
+        let binLabel = document.getElementById('binLabel'); //going into HTML and getting references to elements
+        let cardEmoji = document.getElementById('cardEmoji');
+        let cardName = document.getElementById('cardName');
+
+        function showNextItem() { //pick a random item and display it on the card
+            let randomIndex = Math.floor(Math.random() * items.length);
+            currItem = items[randomIndex];
+            cardEmoji.textContent = currItem.emoji;
+            cardName.textContent = currItem.name;
+        }
+
+        //SWIPING LOGIC------------------------------------------------------
+        function perSwipe() {
+            let correct = (swipedRight === ((currItem.bin === currBin))); //check if the swipe direction matches the correct bin
+            if (correct) {
+                score++;
+                streak++;
+            } else {
+                streak = 0;
+            }
+            showNextItem();
+        }
+
+        let startX = 0;
+        let card = document.getElementById('card');//points to HTML card
+        card.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;   //touch[0] is first finger that touched screen, 
+                                            // clientX is horizontal position of that touch                                                         
+        });
+
+        card.addEventListener('touchend', (e) => { //constantly listening
+            let endX = e.changedTouches[0].clientX;
+            let diff = endX - startX;
+
+            if (diff > 50) perSwipe(true);       // swiped right
+            else if (diff < -50) perSwipe(false); // swiped left
+        });
+
+
+        // mouse events for desktop testing (Can be faded later)                                                             
+        card.addEventListener('mousedown', (e) => { startX = e.clientX; });                              
+        card.addEventListener('mouseup', (e) => {                   
+            let diff = e.clientX - startX;
+            if (diff > 50) perSwipe(true);
+            else if (diff < -50) perSwipe(false);
+        });
+        
+
+
+
+        //INITIALIZING STUFF------------------------------------------------------
+        binLabel.textContent = currBin;
+        showNextItem();
+
+    </script>
     
+
+
+
 </body>
 </html>

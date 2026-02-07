@@ -11,6 +11,8 @@
       <div id="cardEmoji"></div>
       <div id="cardName"></div>
     </div>
+    <div id="feedback"></div><!-- where the feedback is displayed -->
+    <div id="scoreDisplay">Score: 0 | Streak: 0</div><!-- where the score and streak are displayed -->
     <script>
         //BIN + ITEM CHOOSING LOGIC------------------------------------------
         const items = [
@@ -48,19 +50,28 @@
         }
 
         //SWIPING LOGIC------------------------------------------------------
-        function perSwipe() {
+        let feedbackEl = document.getElementById('feedback');//points to feedback element in HTML  
+        let scoreEl = document.getElementById('scoreDisplay');//points to score display element in HTML
+
+        function perSwipe(swipedRight) {
             let correct = (swipedRight === ((currItem.bin === currBin))); //check if the swipe direction matches the correct bin
             if (correct) {
                 score++;
                 streak++;
+                feedbackEl.textContent = 'Correct!';
             } else {
                 streak = 0;
+                feedbackEl.textContent = 'Wrong! It was ' + currItem.bin;
             }
+            scoreEl.textContent = 'Score: ' + score + ' | Streak: ' + streak;
             showNextItem();
         }
 
         let startX = 0;
         let card = document.getElementById('card');//points to HTML card
+        
+
+
         card.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;   //touch[0] is first finger that touched screen, 
                                             // clientX is horizontal position of that touch                                                         

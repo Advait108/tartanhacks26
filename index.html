@@ -73,7 +73,28 @@
     }
     
     #card.animating {                                                                                
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    #timer {
+        font-size: 2rem;
+        font-weight: 900;
+    }
+
+    #urgency {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        box-shadow: inset 0 0 80px rgba(255, 0, 0, 0.4);
+    }
+
+    #urgency.danger {
+        opacity: 1;
     }
 
     .bar {
@@ -106,6 +127,7 @@
         <div id="cardName"></div>
     </div>
     <div id="feedback"></div><!-- where the feedback is displayed -->
+    <div id="urgency"></div>
     <script>
         //BIN + ITEM CHOOSING LOGIC------------------------------------------
         const items = [
@@ -119,7 +141,8 @@
         let score = 0;
         let streak = 0;
 
-        const bins = ['♻️ recycle', '🌱 compost', '🗑️ trash']; //what bins can players be?
+        const bins = ['recycle', 'compost', 'trash']; //what bins can players be?
+        const binEmojis = { recycle: '♻️', compost: '🌱', trash: '🗑️' }; //display emojis for each bin
 
         function getNewBin(){ //pick a random bin at start of game
             let randomIndex = Math.floor(Math.random() * bins.length);
@@ -156,7 +179,21 @@
                 feedbackEl.textContent = 'Wrong! It was ' + currItem.bin;
             }
             scoreEl.textContent = 'Score: ' + score + ' | Streak: ' + streak;
+
+            // fly the card off screen, uncomment belo for fly off animation
+            /*
             showNextItem();
+            card.classList.add('animating');
+            let flyX = swipedRight ? 500 : -500;
+            card.style.transform = `translateX(${flyX}px) rotate(${flyX * 0.05}deg)`;
+            card.style.opacity = '0';
+
+            // after animation finishes, load next item
+            setTimeout(() => {
+                card.classList.remove('animating');
+                card.style.opacity = '1';
+                showNextItem();
+            }, 300);*/
         }
 
         let startX = 0;
@@ -205,11 +242,30 @@
             else card.style.transform = '';
             card.classList.add('animating');
         });
+        //TIMER LOGIC------------------------------------------------------
+        let timeLeft = 30;                                            
+        let timerEl = document.getElementById('timer');                                                  
+        let urgencyEl = document.getElementById('urgency');                                              
+                                                                                                        
+        let timerInterval = setInterval(() => {                                                          
+            timeLeft--;
+            timerEl.textContent = timeLeft;
 
+            if (timeLeft <= 10) {
+                urgencyEl.classList.add('danger');
+            }
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert('Time is up! Score: ' + score);
+            }
+        }, 1000);
+        
         //INITIALIZING STUFF------------------------------------------------------
-        binLabel.textContent = currBin;
+        binLabel.textContent = binEmojis[currBin] + ' ' + currBin;
         showNextItem();
 
     </script>
+    
 </body>
 </html>

@@ -144,11 +144,20 @@
     }
 
     .tag {
-        background: rgba(255, 255, 255, 0.25);
         padding: 4px 10px;
         border-radius: 20px;
         font-size: 0.75rem;
-        font-weight: 500;
+        font-weight: 600;
+    }
+
+    .tag-green {
+        background: rgba(76, 175, 80, 0.2);
+        color: #2e7d32;
+    }
+
+    .tag-red {
+        background: rgba(233, 69, 96, 0.2);
+        color: #c0392b;
     }
 
     .card-buttons {
@@ -243,7 +252,7 @@
             currItem = items[randomIndex];
             cardEmoji.textContent = currItem.emoji;
             cardName.textContent = currItem.name;
-            cardTags.innerHTML = currItem.tags.map(t => `<span class="tag">${t}</span>`).join('');
+            cardTags.innerHTML = currItem.tags.map((t, i) => `<span class="tag ${i < 2 ? 'tag-green' : 'tag-red'}">${t}</span>`).join('');
             card.style.transform = ''; //reset card position for next item
         }
 

@@ -589,6 +589,25 @@
         }
         let currBin = getNewBin(); //current bin that a player is assigned to
 
+        //SOUND EFFECTS (Web Audio API - no files needed)-------------------
+        let audioCtx = null;
+        function beep(freq, dur, type) { // freq in Hz, dur in seconds, type = wave shape
+            if (!audioCtx) audioCtx = new AudioContext();
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = freq;
+            osc.type = type || 'sine';
+            gain.gain.value = 0.15;
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+            osc.stop(audioCtx.currentTime + dur);
+        }
+        function sndCorrect() { beep(660, 0.15); beep(880, 0.2); } // happy two-tone
+        function sndWrong() { beep(220, 0.25, 'square'); }          // low buzz
+        function sndMatch() { beep(520, 0.1); beep(660, 0.1); beep(880, 0.15); } // triple chime
+
         let remaining = []; // items not yet shown this cycle
         let currItem = null;
         let binLabel = document.getElementById('binLabel'); //going into HTML and getting references to elements
@@ -629,10 +648,13 @@
                 correct_count++;
                 // streak++;
                 feedbackEl.textContent = 'Correct!';
-                if (swipedRight) showMatch(); // "It's a Match!" animation on correct right swipes
+                navigator.vibrate?.(50); // haptic buzz on correct
+                if (swipedRight) { showMatch(); sndMatch(); } else { sndCorrect(); }
             } else {
                 // streak = 0;
                 feedbackEl.textContent = 'Wrong! It was ' + currItem.bin + ' ' + binEmojis[currItem.bin];
+                navigator.vibrate?.([50, 30, 50]); // double buzz on wrong
+                sndWrong();
             }
             scoreNum.textContent = score;
             // streakNum.textContent = streak;

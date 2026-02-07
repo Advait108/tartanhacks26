@@ -8,18 +8,46 @@
 <style>
     *{
         margin: 0px;
-        height: 100%;
+        padding: 0;
     }
     body{
+        width: 100vw;
+        height: 100dvh;
         display: flex; 
+        flex-direction: column;
+        overflow: hidden;
         align-items: center;
         justify-content: center;
         background-image: linear-gradient(0deg, rgb(209, 236, 207), rgb(69, 87, 69));
         color: white;
+        padding: 20px;
         font-family: system-ui, sans-serif;
     }
     #app-title{
         margin-top: 2.5rem;
+    }
+
+    #card {                                                                                          
+      width: 250px;                                                                                
+      height: 300px;                                                                               
+      background: rgba(255, 255, 255, 0.15);                                                       
+      border-radius: 20px;                                                                         
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0;
+      cursor: grab;
+    }
+
+    #cardEmoji {
+        font-size: 4rem;
+    }
+
+    #cardName {
+        font-size: 1.3rem;
+        font-weight: 600;
     }
 </style>
 <body>

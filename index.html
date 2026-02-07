@@ -9,10 +9,11 @@
     *{
         margin: 0px;
         padding: 0;
+        box-sizing: border-box;
     }
-    
+
     body{
-        width: 100vw;
+        width: 100%;
         min-height: 100dvh;
         display: flex; 
         flex-direction: column;
@@ -55,10 +56,12 @@
 
     .chips{
         display:flex;
+        flex-direction:row;
         gap: 0.625rem;
         justify-content:center;
         flex-wrap:wrap;
         margin: 0.625rem 0 1rem;
+        width: 100%;
     }
 
     .chip{
@@ -72,8 +75,7 @@
         color: rgba(255,255,255,.92);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        box-shadow:
-        0 10px 22px rgba(0,0,0,.10),
+        box-shadow: 0 10px 22px rgba(0,0,0,.10);
     }
 
     .chip .label{
@@ -584,8 +586,7 @@
 
     <!-- GAME SCREEN -->
     <h1 class ="app-title">🌱 EcoHinge</h1>
-    <p class="subtitle">You've been matched with a bin: swipe right on items that belong and left on the rest!</p>
-    <div class= "chips">
+    <div class="chips">
         <div class="chip"><span class="label">Bin:</span> <span class="value" id="binLabel"></span></div>
         <div class="chip"><span class="label">Score:</span> <span class="value" id="scoreNum">0</span></div>
         <!-- <div class="chip"><span class="label">Streak:</span> <span class="value" id="streakNum">0</span></div> -->
@@ -659,7 +660,7 @@
 
         //SOUND EFFECTS (Web Audio API - no files needed)-------------------
         let audioCtx = null;
-        function beep(freq, dur, type) { // freq in Hz, dur in seconds, type = wave shape
+        function beep(freq, dur, type, vol) { // freq in Hz, dur in seconds, type = wave shape, vol = volume 0-1
             if (!audioCtx) audioCtx = new AudioContext();
             let osc = audioCtx.createOscillator();
             let gain = audioCtx.createGain();
@@ -667,14 +668,14 @@
             gain.connect(audioCtx.destination);
             osc.frequency.value = freq;
             osc.type = type || 'sine';
-            gain.gain.value = 0.15;
+            gain.gain.value = vol || 0.15;
             osc.start();
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
             osc.stop(audioCtx.currentTime + dur);
         }
-        function sndCorrect() { beep(523, 0.1); setTimeout(() => beep(659, 0.1), 80); setTimeout(() => beep(784, 0.15), 160); } // rising C-E-G major chord
-        function sndWrong() { beep(311, 0.2, 'sawtooth'); setTimeout(() => beep(233, 0.35, 'sawtooth'), 150); } // descending sad slide
-        function sndMatch() { beep(523, 0.08); setTimeout(() => beep(659, 0.08), 70); setTimeout(() => beep(784, 0.08), 140); setTimeout(() => beep(1047, 0.25), 210); } // triumphant C-E-G-C octave
+        function sndCorrect() { beep(523, 0.1, 'sine', 0.3); setTimeout(() => beep(659, 0.1, 'sine', 0.3), 80); setTimeout(() => beep(784, 0.15, 'sine', 0.3), 160); }
+        function sndWrong() { beep(311, 0.2, 'sawtooth', 0.08); setTimeout(() => beep(233, 0.35, 'sawtooth', 0.08), 150); }
+        function sndMatch() { beep(523, 0.08, 'sine', 0.3); setTimeout(() => beep(659, 0.08, 'sine', 0.3), 70); setTimeout(() => beep(784, 0.08, 'sine', 0.3), 140); setTimeout(() => beep(1047, 0.25, 'sine', 0.35), 210); }
 
         //CARD LOGIC------------------------------------------------------
         let remaining = []; // items not yet shown this cycle
@@ -853,6 +854,9 @@
 
         //START SCREEN------------------------------------------------------
         document.getElementById('startBtn').addEventListener('click', () => {
+            // unlock audio on mobile — browsers require a user tap before sound can play
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             document.getElementById('startScreen').classList.add('hidden');
             startTimer();
         });

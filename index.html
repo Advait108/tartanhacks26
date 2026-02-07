@@ -21,8 +21,13 @@
         background-image: linear-gradient(0deg, rgb(209, 236, 207), rgb(69, 87, 69));
         color: white;
         padding: 20px;
-        font-family: system-ui, sans-serif;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
     }
+
+    p{
+        margin: 2rem;
+    }
+
     #app-title{
         margin-top: 2.5rem;
     }
@@ -58,32 +63,34 @@
 
     #scoreDisplay {
         font-size: 1.1rem;
-        opacity: 0.8;
-    }
-
-    #info {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
     }
     
     #card.animating {                                                                                
         transition: transform 0.3s ease;
     }
+
+    .bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
 <body>
     <h1 id="app-title">Compost Cupid</h1>
-    <div id="info">You are the <span id="binLabel"></span> bin</div>  <!-- where the bin is displayed -->
+    <p>You've been matched with a bin: swipe right on items that belong and left on the rest!</p>
+    <div class = "bar">
+        <div id="scoreDisplay">
+            Bin: <span id="binLabel"></span> <!-- where the bin is displayed -->
+            | Score: 0 | Streak: 0
+        </div><!-- where the score and streak are displayed -->
+    </div>
     <div id="card"> <!-- where the item is displayed -->
-      <div id="cardEmoji"></div>
-      <div id="cardName"></div>
+        <div id="cardEmoji"></div>
+        <div id="cardName"></div>
     </div>
     <div id="feedback"></div><!-- where the feedback is displayed -->
-    <div id="scoreDisplay">Score: 0 | Streak: 0</div><!-- where the score and streak are displayed -->
     <script>
-
-
-
-
         //BIN + ITEM CHOOSING LOGIC------------------------------------------
         const items = [
             { emoji: '📦', name: 'Cardboard Box', bin: 'recycle' },
@@ -96,7 +103,7 @@
         let score = 0;
         let streak = 0;
 
-        const bins = ['recycle', 'compost', 'trash'];//what bins can players be?
+        const bins = ['♻️ recycle', '🌱 compost', '🗑️ trash']; //what bins can players be?
 
         function getNewBin(){ //pick a random bin at start of game
             let randomIndex = Math.floor(Math.random() * bins.length);
@@ -157,8 +164,6 @@
             if (diff > 50) perSwipe(true);       // swiped right
             else if (diff < -50) perSwipe(false); // swiped left
         });
-
-
 
         // mouse events for desktop testing (Can be faded later)
         let isDragging = false;

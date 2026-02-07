@@ -98,7 +98,7 @@
     <div class="bar">
         <div id="scoreDisplay">
             <span class="bold-text">Bin: </span><span id="binLabel"></span>
-            | <span class="bold-text">Score:</span> 0 | <span class="bold-text">Streak:</span> 0
+            | <span class="bold-text">Score:</span> <span id="scoreNum">0</span> | <span class="bold-text">Streak:</span> <span id="streakNum">0</span>
         </div>
     </div>
     <div id="card"> <!-- where the item is displayed -->
@@ -144,7 +144,8 @@
 
         //SWIPING LOGIC------------------------------------------------------
         let feedbackEl = document.getElementById('feedback');//points to feedback element in HTML
-        let scoreEl = document.getElementById('scoreDisplay');//points to score display element in HTML
+        let scoreNum = document.getElementById('scoreNum');//points to score number span
+        let streakNum = document.getElementById('streakNum');//points to streak number span
 
         function perSwipe(swipedRight) {
             let correct = (swipedRight === ((currItem.bin === currBin))); //check if the swipe direction matches the correct bin
@@ -156,7 +157,8 @@
                 streak = 0;
                 feedbackEl.textContent = 'Wrong! It was ' + currItem.bin;
             }
-            scoreEl.textContent = 'Score: ' + score + ' | Streak: ' + streak;
+            scoreNum.textContent = score;
+            streakNum.textContent = streak;
             showNextItem();
         }
 

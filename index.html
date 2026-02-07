@@ -32,11 +32,11 @@
         margin-top: 2.5rem;
     }
 
-    #card {                                                                                          
-        width: 16rem;                                                                                
-        height: 19rem;                                                                               
-        background: rgba(255, 255, 255, 0.5);                                                       
-        border-radius: 20px;                                                                         
+    #card {
+        width: 16rem;
+        height: 19rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -47,7 +47,7 @@
         border:1px solid rgba(18,48,31,.10);
         box-shadow:0 18px 50px rgba(18,48,31,.18);
         transform:translate3d(0,0,0) rotate(0deg);
-        touch-action: none; 
+        touch-action: none;
     }
 
     #cardEmoji {
@@ -91,6 +91,55 @@
         font-weight: 600;
     }
 
+    #cardTags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+        padding: 0 12px;
+    }
+
+    .tag {
+        background: rgba(255, 255, 255, 0.25);
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .card-buttons {
+        display: flex;
+        gap: 24px;
+        margin-top: 16px;
+    }
+
+    .card-btn {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        background: rgba(255, 255, 255, 0.5);
+        border: none;
+        box-shadow: 0 4px 12px rgba(18, 48, 31, 0.12);
+        cursor: pointer;
+        transition: transform 0.15s;
+    }
+
+    .card-btn:active {
+        transform: scale(0.9);
+    }
+
+    .btn-x {
+        color: #c0392b;
+    }
+
+    .btn-heart {
+        color: #27ae60;
+    }
+
 </style>
 <body>
     <h1 id="app-title">Compost Cupid</h1>
@@ -104,17 +153,22 @@
     <div id="card"> <!-- where the item is displayed -->
         <div id="cardEmoji"></div>
         <div id="cardName"></div>
+        <div id="cardTags"></div>
+    </div>
+    <div class="card-buttons">
+        <div class="card-btn btn-x">✕</div>
+        <div class="card-btn btn-heart">❤</div>
     </div>
     <div id="feedback"></div><!-- where the feedback is displayed -->
     <script>
         //BIN + ITEM CHOOSING LOGIC------------------------------------------
         const items = [
-            { emoji: '📦', name: 'Cardboard Box', bin: 'recycle' },
-            { emoji: '🍌', name: 'Banana Peel', bin: 'compost' },
-            { emoji: '🪥', name: 'Used Toothbrush', bin: 'trash' },
-            { emoji: '🍕', name: 'Greasy Pizza Box', bin: 'trash' },
-            { emoji: '🥫', name: 'Tomato Can', bin: 'recycle' },
-            { emoji: '☕', name: 'Ground Coffee', bin: 'compost' },
+            { emoji: '📦', name: 'Cardboard Box', bin: 'recycle', tags: ['flatten me', 'paper-based', 'dry goods'] },
+            { emoji: '🍌', name: 'Banana Peel', bin: 'compost', tags: ['biodegradable', 'organic', 'fruit waste'] },
+            { emoji: '🪥', name: 'Used Toothbrush', bin: 'trash', tags: ['mixed plastic', 'too small', 'bathroom'] },
+            { emoji: '🍕', name: 'Greasy Pizza Box', bin: 'trash', tags: ['grease ruins it', 'misleading', 'food-soiled'] },
+            { emoji: '🥫', name: 'Tomato Can', bin: 'recycle', tags: ['rinse first', 'metal', 'kitchen'] },
+            { emoji: '☕', name: 'Ground Coffee', bin: 'compost', tags: ['filter too!', 'nitrogen-rich', 'garden gold'] },
         ];
         let score = 0;
         let streak = 0;
@@ -133,12 +187,14 @@
         let binLabel = document.getElementById('binLabel'); //going into HTML and getting references to elements
         let cardEmoji = document.getElementById('cardEmoji');
         let cardName = document.getElementById('cardName');
+        let cardTags = document.getElementById('cardTags');
 
         function showNextItem() { //pick a random item and display it on the card
             let randomIndex = Math.floor(Math.random() * items.length);
             currItem = items[randomIndex];
             cardEmoji.textContent = currItem.emoji;
             cardName.textContent = currItem.name;
+            cardTags.innerHTML = currItem.tags.map(t => `<span class="tag">${t}</span>`).join('');
             card.style.transform = ''; //reset card position for next item
         }
 
@@ -208,6 +264,27 @@
             else card.style.transform = '';
             card.classList.add('animating');
         });
+        //BUTTON CLICKS------------------------------------------------------
+        document.querySelector('.btn-x').addEventListener('click', () => {
+            card.classList.add('animating');
+            card.style.transform = 'translateX(-300px) rotate(-30deg)';
+            card.style.opacity = '0';
+            setTimeout(() => {
+                perSwipe(false);
+                card.style.opacity = '1';
+            }, 300);
+        });
+
+        document.querySelector('.btn-heart').addEventListener('click', () => {
+            card.classList.add('animating');
+            card.style.transform = 'translateX(300px) rotate(30deg)';
+            card.style.opacity = '0';
+            setTimeout(() => {
+                perSwipe(true);
+                card.style.opacity = '1';
+            }, 300);
+        });
+
         //INITIALIZING STUFF------------------------------------------------------
         binLabel.textContent = binEmojis[currBin] + ' ' + currBin;
         showNextItem();

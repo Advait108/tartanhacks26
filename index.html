@@ -25,7 +25,7 @@
         font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
     }
 
-    #app-title{
+    .app-title{
         letter-spacing: -0.02em;
         font-weight: 900;
         color: rgba(240,255,246,.78);
@@ -293,12 +293,25 @@
     }
 
     .start-content {
+        position: relative;
+        z-index: 1;
+        width: min(22rem, 92vw);
+        padding: 1.3rem 1.2rem 1.1rem;
+        border-radius: 1.7rem;
+        background: linear-gradient(180deg,
+            rgba(255,255,255,.26),
+            rgba(255,255,255,.14)
+        );
+        border: 1px solid rgba(255,255,255,.28);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 2.2rem 5.2rem rgba(0,0,0,.22);
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 6px;
-        padding: 20px;
+        justify-content: center;
+        gap: .55rem;
     }
 
     .start-logo {
@@ -330,7 +343,10 @@
         flex-direction: column;
         gap: 8px;
         margin: 24px 0;
-        text-align: left;
+        text-align: center;
+        width: 100%;
+        justify-content: center;
+        color: rgba(240, 255, 246, 0.85);
     }
 
     .start-step {
@@ -341,14 +357,19 @@
     .start-btn {
         margin-top: 8px;
         padding: 16px 48px;
-        background: white;
-        color: rgb(69, 87, 69);
+        color: rgba(33, 44, 33, .78);
         border-radius: 999px;
         font-weight: 800;
         font-size: 1.1rem;
         cursor: pointer;
         transition: transform 0.15s;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(180deg,
+            rgba(255,255,255,.55),
+            rgba(235,255,236,.22)
+        );
+        border: 1px solid rgba(255,255,255,.32);
+        color: rgba(33, 44, 33, .82);
+        box-shadow: 0 1.2rem 2.6rem rgba(57, 78, 52, 0.18);
     }
 
     .start-btn:active {
@@ -507,10 +528,10 @@
     <!-- START SCREEN -->
     <div id="startScreen">
         <div class="start-content">
-            <div class="start-logo">♻️</div>
-            <h1 class="start-title">Eco<span class="start-highlight">Hinge</span></h1>
+            <div class="start-logo">🌱</div>
+            <h1 class="app-title">EcoHinge</h1>
             <div class="start-instructions">
-                <div class="start-step">You will be assigned a waste bin</div>
+                <div class="start-step"><b>You will be assigned a waste bin</b></div>
                 <div class="start-step">👉 Swipe right if the item belongs in your bin</div>
                 <div class="start-step">👈 Swipe left if it doesn't</div>
                 <div class="start-step">⏱️ 20 seconds on the clock</div>
@@ -520,7 +541,7 @@
     </div>
 
     <!-- GAME SCREEN -->
-    <h1 id="app-title">EcoHinge</h1>
+    <h1 class ="app-title">EcoHinge</h1>
     <p class="subtitle">You've been matched with a bin: swipe right on items that belong and left on the rest!</p>
     <div class= "chips">
         <div class="chip"><span class="label">Bin:</span> <span class="value" id="binLabel"></span></div>

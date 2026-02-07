@@ -194,7 +194,7 @@
         color: #6db86d;
     }
 
-    /* match overlay — covers screen, hidden by default */
+    /* "It's a Match!" animation styles */
     #matchOverlay {
         position: fixed;
         top: 0; left: 0;
@@ -273,7 +273,7 @@
     </div>
     <div id="feedback" class="neutral">Swipe to start 💚</div>
 
-    <!-- match overlay, hidden by default -->
+    <!-- "It's a Match!" animation -->
     <div id="matchOverlay">
         <div class="match-text">It's a Match!</div>
         <div class="match-hearts">
@@ -320,10 +320,10 @@
             card.style.transform = ''; //reset card position for next item
         }
 
-        //MATCH ANIMATION------------------------------------------------------
+        //"IT'S A MATCH!" ANIMATION------------------------------------------------------
         let matchOverlay = document.getElementById('matchOverlay');
 
-        function showMatch() {
+        function showMatch() { // shows "It's a Match!" animation
             matchOverlay.classList.add('show');
             setTimeout(() => {
                 matchOverlay.classList.remove('show');
@@ -341,7 +341,7 @@
                 score++;
                 streak++;
                 feedbackEl.textContent = 'Correct!';
-                if (swipedRight) showMatch(); // only show match when accepting into bin
+                if (swipedRight) showMatch(); // "It's a Match!" animation on correct right swipes
             } else {
                 streak = 0;
                 feedbackEl.textContent = 'Wrong! It was ' + currItem.bin;

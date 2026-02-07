@@ -13,7 +13,7 @@
     
     body{
         width: 100vw;
-        height: 100dvh;
+        min-height: 100dvh;
         display: flex; 
         flex-direction: column;
         overflow: hidden;
@@ -26,7 +26,7 @@
     }
 
     #app-title{
-        margin-top: 2.2rem;
+        margin-top: 0.5rem;
         letter-spacing: -0.02em;
         font-weight: 900;
     }
@@ -117,7 +117,6 @@
 
     #feedback {                                                                                      
         display:inline-block;
-        margin: 0.5rem auto 0;
         padding: 0.625rem 1rem;
         border-radius: 999px;
         font-weight: 900;
@@ -154,13 +153,13 @@
 
     .card-buttons {
         display: flex;
-        gap: 24px;
-        margin-top: 16px;
+        gap: 1.5rem;
+        margin-bottom: 0.625rem;
     }
 
     .card-btn {
-        width: 56px;
-        height: 56px;
+        width: 3.5rem;
+        height: 3.5rem;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -171,6 +170,7 @@
         box-shadow: 0 4px 12px rgba(18, 48, 31, 0.12);
         cursor: pointer;
         transition: transform 0.15s;
+        margin: 0.625rem 0;
     }
 
     .card-btn:active {
@@ -182,8 +182,9 @@
     }
 
     .btn-heart {
-        color: #27ae60;
+        color: #6db86d;
     }
+    
 </style>
 
 <body>
@@ -207,6 +208,7 @@
         <div class="card-btn btn-heart">❤</div>
     </div>
     <div id="feedback" class="neutral">Swipe to start 💚</div>
+    
     <script>
         //BIN + ITEM CHOOSING LOGIC------------------------------------------
         const items = [

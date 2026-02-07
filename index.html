@@ -211,6 +211,7 @@
         border-radius: 20px;
         font-size: 0.75rem;
         font-weight: 600;
+        text-align: center;
     }
 
     .tag-green {
@@ -590,17 +591,38 @@
     <script>
         //BIN + ITEM CHOOSING LOGIC------------------------------------------
         const items = [
-            { emoji: '📦', name: 'Cardboard Box', bin: 'recycle', tags: ['no food residue ', 'paper-based', 'dry goods'] },
-            { emoji: '🍌', name: 'Banana Peel', bin: 'compost', tags: ['biodegradable', 'organic', 'fruit waste'] },
-            { emoji: '🪥', name: 'Used Toothbrush', bin: 'trash', tags: ['mixed plastic', 'too small', 'bathroom'] },
-            { emoji: '🍕', name: 'Greasy Pizza Box', bin: 'trash', tags: ['grease ruins it', 'misleading', 'food-soiled'] },
-            { emoji: '🥫', name: 'Tomato Can', bin: 'recycle', tags: ['rinse first', 'metal', 'kitchen'] },
-            { emoji: '☕', name: 'Ground Coffee', bin: 'compost', tags: ['filter too!', 'nitrogen-rich', 'garden gold', 'addicting'] },
-            { emoji: '🍝', name: 'Pasta', bin: 'compost', tags: ['im an impasta', 'nitrogen-rich', 'garden gold'] },
-            { emoji: '💻', name: 'Computer', bin: 'none', tags: ['perform really complex tasks','have major errors']},
-            { emoji: '🔋', name: 'Battery', bin: 'none', tags: ['can be really positive','can be really negative']},
-            { emoji: '🥩', name: 'Raw Meat', bin: 'trash', tags: ['gross', 'attracts pests', 'not compostable']}
+            //Recycle
+            { emoji: '📦', name: 'Cardboard Box', bin: 'recycle', tags: ["flatten me",'carries your stuff','grow mold when wet','breaks under pressure'] },
+            { emoji: '🥫', name: 'Tomato Can', bin: 'recycle', tags: ['metal preserves food', 'always fresh','acid corrodes me','canned emotions'] },
+            { emoji: '🍾', name: 'Glass Bottle', bin: 'recycle', tags: ['non-toxic material','clear with you','causes sand shortage','breaks easily'] },
+            { emoji: '📰', name: 'Newspaper', bin: 'recycle', tags: ['uses soy-based inks','keeps you updated','made from trees','becomes irrelevant fast'] },
+            { emoji: '🥛', name: 'Milk Carton', bin: 'recycle', tags: ['protects nutrients','childhood favorite','plastic lining inside','spoils fast'] },
+            { emoji: '📚', name: 'Notebook', bin: 'recycle', tags: ['uses natural resources','good listener','wastes paper','falls apart over time'] },
+            { emoji: '🎁', name: 'Wrapping Paper', bin: 'recycle', tags: ['uses plant-derived pulp','looks pretty','used once','easily torn'] },
+            //Compost
+            { emoji: '🍌', name: 'Banana Peel', bin: 'compost', tags: ['naturally decomposes','slips into your life','produces methane in landfill','go bad easily'] },
+            { emoji: '☕', name: 'Ground Coffee', bin: 'compost', tags: ['nitrogen-rich', 'wake you up', 'rot quickly', 'addicting'] },
+            { emoji: '🍝', name: 'Pasta', bin: 'compost', tags: ['add nutrients to soil','always there for you', 'causes food waste','im an impasta'] },
+            { emoji: '🥢', name: 'Wooden Chopsticks', bin: 'compost', tags: ["ancient utensil","2 in 1",'uses trees',"chopped"] },
+            { emoji: '🍎', name: 'Apple Core', bin: 'compost', tags: ['all natural','keeps the doctor away','releases cyanide','leftovers'] },
+            { emoji: '🥚', name: 'Eggshells', bin: 'compost', tags: ['rich in calcium','ill crack you up','creates odor pollution','breaks easily'] },
+            { emoji: '🍞', name: 'Bread', bin: 'compost', tags: ['made from renewable plant crops','warm','molds easily','crumble easily'] },
+            { emoji: '🌸', name: 'Dead Flowers', bin: 'compost', tags: ['pollinator','romantic','pesticide use causes issues','fades quickly'] },
+            { emoji: '🍂', name: 'Leaves', bin: 'compost', tags: ["nature's fertilizer",'grounded','cause eutrophication','be there seasonally'] },
+            { emoji: '🧻', name: 'Paper Towel', bin: 'compost', tags: ['made from natural cellulose fibers','helps clean up','single use','gets dirty easily'] },
+            //Trash
+            { emoji: '🪥', name: 'Toothbrush', bin: 'trash', tags: ['reusable','help with hygiene', 'has synthetic polymers','only good for 3 months'] },
+            { emoji: '🍕', name: 'Used Pizza Box', bin: 'trash', tags: ['insulates contents','smells good','contaminated cardboard fibers','greasy'] },
+            { emoji: '🥩', name: 'Raw Meat', bin: 'trash', tags: ['high nutrients','fuels you','gives you salmonella', 'attracts wrong crowd']},
+            { emoji: '🥡', name: 'Styrofoam Container', bin: 'trash', tags: ['thermal insulator','take me out', 'petroleum-based plastic','fragile']},
+            { emoji: '👕', name: 'Clothes', bin: 'trash', tags: ['reusable through donation','have great style',"contains synthetics", "you'll get attached"]},
+            { emoji: '🪪', name: 'Plastic ID', bin: 'trash', tags: ['durable','knows where you live', 'must destroy first','identity crisis']},
+            //None
+            { emoji: '💻', name: 'Computer', bin: 'none', tags: ['perform complex tasks','good at communicating','leak personal info','have many errors']},
+            { emoji: '🔋', name: 'Battery', bin: 'none', tags: ['stores energy efficiently','bring positive energy','toxic chemicals can leak into environment','can be really negative']},
+            { emoji: '🐕‍🦺', name: "Scotty Dog", bin: 'none', tags: ['love of your life', 'no red flags']}
         ];
+
         let score = 0;
         let total = 0; // total swipes
         let correct_count = 0; // correct swipes
@@ -823,7 +845,7 @@
         let endScreen = document.getElementById('endScreen');
 
         function endGame() {
-            let accuracy = total > 0 ? Math.round((correct_count / items.length) * 100) : 0;
+            let accuracy = total > 0 ? Math.round((correct_count / total) * 100) : 0;
 
             // pick message based on accuracy
             if (accuracy > 32) {
@@ -835,7 +857,7 @@
             }
 
             document.getElementById('endScore').textContent = score;
-            document.getElementById('endAccuracy').textContent = correct_count + '/' + items.length + ' correct (' + accuracy + '%)';
+            document.getElementById('endAccuracy').textContent = correct_count + '/' + total + ' correct (' + accuracy + '%)';
             endScreen.classList.add('show');
         }
 

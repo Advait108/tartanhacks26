@@ -660,11 +660,14 @@
             { emoji: '🥡', name: 'Styrofoam Container', bin: 'trash', tags: ['thermal insulator','take me out', 'petroleum-based plastic','fragile']},
             { emoji: '👕', name: 'Clothes', bin: 'trash', tags: ['reusable through donation','have great style',"contains synthetics", "you'll get attached"]},
             { emoji: '🪪', name: 'Plastic ID', bin: 'trash', tags: ['durable','knows where you live', 'must destroy first','identity crisis']},
+            { emoji: '🍬', name: 'Candy Wrapper', bin: 'trash', tags: ['protects food from contamination','sweet','plastic film','never stays long'] },  
+            { emoji: '🧽', name: 'Sponge', bin: 'trash', tags: ['absorbs everything','cleans your mess','have petroleum-based plastics','full of bacteria'] },
             //None
             { emoji: '💻', name: 'Computer', bin: 'none', tags: ['perform complex tasks','good at communicating','leak personal info','have many errors']},
             { emoji: '🔋', name: 'Battery', bin: 'none', tags: ['stores energy efficiently','bring positive energy','toxic chemicals can leak into environment','can be really negative']},
             { emoji: '🐕‍🦺', name: "Scotty Dog!", bin: 'none', tags: ['love of your life', 'no red flags']}
         ];
+
 
         let score = 0;
         let total = 0; // total swipes
@@ -672,7 +675,7 @@
         // let streak = 0;
 
         const bins = ['recycle', 'compost', 'trash']; //what bins can players be?
-        const binEmojis = { recycle: '♻️', compost: '🌱', trash: '🗑️' }; //display emojis for each bin
+        const binEmojis = { recycle: '♻️', compost: '🌱', trash: '🗑️', none: '⚠️' }; //display emojis for each bin
 
         function getNewBin(){ //pick a random bin at start of game
             let randomIndex = Math.floor(Math.random() * bins.length);

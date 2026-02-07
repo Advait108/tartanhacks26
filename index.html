@@ -49,6 +49,26 @@
         font-size: 1.3rem;
         font-weight: 600;
     }
+
+    #feedback {                                                                                      
+      font-size: 1.3rem;                                                                           
+      font-weight: 700;                                                                            
+      min-height: 2rem;                                                                            
+    }
+
+    #scoreDisplay {
+        font-size: 1.1rem;
+        opacity: 0.8;
+    }
+
+    #info {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    #card.animating {                                                                                
+        transition: transform 0.3s ease;
+    }
 </style>
 <body>
     <h1 id="app-title">Compost Cupid</h1>
@@ -60,6 +80,10 @@
     <div id="feedback"></div><!-- where the feedback is displayed -->
     <div id="scoreDisplay">Score: 0 | Streak: 0</div><!-- where the score and streak are displayed -->
     <script>
+
+
+
+
         //BIN + ITEM CHOOSING LOGIC------------------------------------------
         const items = [
             { emoji: '📦', name: 'Cardboard Box', bin: 'recycle' },
@@ -91,6 +115,7 @@
             currItem = items[randomIndex];
             cardEmoji.textContent = currItem.emoji;
             cardName.textContent = currItem.name;
+            card.style.transform = ''; //reset card position for next item
         }
 
         //SWIPING LOGIC------------------------------------------------------
@@ -117,22 +142,47 @@
         card.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;   //touch[0] is first finger that touched screen,
                                             // clientX is horizontal position of that touch
+            card.classList.remove('animating'); //animation off while dragging, so it follows finger
+        });
+
+        card.addEventListener('touchmove', (e) => {                                                      
+            let diff = e.touches[0].clientX - startX;                                                    
+            card.style.transform = `translateX(${diff}px) rotate(${diff * 0.1}deg)`;                     
         });
 
         card.addEventListener('touchend', (e) => { //constantly listening
             let endX = e.changedTouches[0].clientX;
             let diff = endX - startX;
-
+            card.classList.add('animating');
             if (diff > 50) perSwipe(true);       // swiped right
             else if (diff < -50) perSwipe(false); // swiped left
         });
 
+
+
         // mouse events for desktop testing (Can be faded later)
-        card.addEventListener('mousedown', (e) => { startX = e.clientX; });
-        card.addEventListener('mouseup', (e) => {
+        let isDragging = false;
+
+        card.addEventListener('mousedown', (e) => {
+            startX = e.clientX;
+            isDragging = true;
+            card.classList.remove('animating');
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            let diff = e.clientX - startX;
+            card.style.transform = `translateX(${diff}px) rotate(${diff * 0.1}deg)`;
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
             let diff = e.clientX - startX;
             if (diff > 50) perSwipe(true);
             else if (diff < -50) perSwipe(false);
+            else card.style.transform = '';
+            card.classList.add('animating');
         });
 
         //INITIALIZING STUFF------------------------------------------------------

@@ -665,7 +665,6 @@
             //None
             { emoji: '💻', name: 'Computer', bin: 'none', tags: ['perform complex tasks','good at communicating','leak personal info','have many errors']},
             { emoji: '🔋', name: 'Battery', bin: 'none', tags: ['stores energy efficiently','bring positive energy','toxic chemicals can leak into environment','can be really negative']},
-            { emoji: '🐕‍🦺', name: "Scotty Dog!", bin: 'none', tags: ['love of your life', 'no red flags']}
         ];
 
 
@@ -706,6 +705,8 @@
         //CARD LOGIC------------------------------------------------------
         let remaining = []; // items not yet shown this cycle
         let currItem = null;
+        let swipeCount = 0; // track swipe number for hardcoded items
+        const scottyDog = { emoji: '🐕‍🦺', name: "Scotty Dog!", bin: 'none', tags: ['love of your life', 'no red flags'] };
         let binLabel = document.getElementById('binLabel'); //going into HTML and getting references to elements
         let cardEmoji = document.getElementById('cardEmoji');
         let cardName = document.getElementById('cardName');
@@ -714,21 +715,26 @@
         const BIN_BIAS = 2; // items from player's bin are this many times more likely (1 = no bias, 3 = 3x more likely)
 
         function showNextItem() { //pick a random item and display it on the card
-            if (remaining.length === 0) remaining = [...items]; // refill when all shown
+            swipeCount++;
 
-            // give each item a weight — matching bin items get BIN_BIAS, others get 1
-            let weights = remaining.map(item => item.bin === currBin ? BIN_BIAS : 1);
-            let totalWeight = weights.reduce((sum, w) => sum + w, 0); // add up all weights
-            let roll = Math.random() * totalWeight; // pick a random point in the total weight
+            if (swipeCount === 3) { // hardcode Scotty Dog as 3rd item
+                currItem = scottyDog;
+            } else {
+                if (remaining.length === 0) remaining = [...items]; // refill when all shown
 
-            // walk through items, subtracting each weight from roll until we land on one
-            let randomIndex = 0;
-            for (let i = 0; i < weights.length; i++) {
-                roll -= weights[i];
-                if (roll <= 0) { randomIndex = i; break; }
+                // give each item a weight — matching bin items get BIN_BIAS, others get 1
+                let weights = remaining.map(item => item.bin === currBin ? BIN_BIAS : 1);
+                let totalWeight = weights.reduce((sum, w) => sum + w, 0);
+                let roll = Math.random() * totalWeight;
+
+                let randomIndex = 0;
+                for (let i = 0; i < weights.length; i++) {
+                    roll -= weights[i];
+                    if (roll <= 0) { randomIndex = i; break; }
+                }
+
+                currItem = remaining.splice(randomIndex, 1)[0];
             }
-
-            currItem = remaining.splice(randomIndex, 1)[0]; // pick and remove from pool
             cardEmoji.textContent = currItem.emoji;
             cardName.textContent = currItem.name;
             cardTags.innerHTML = currItem.tags.map((t, i) => `<span class="tag ${i < 2 ? 'tag-green' : 'tag-red'}">${t}</span>`).join('');
@@ -914,6 +920,7 @@
             correct_count = 0;
             timeLeft = 45;
             remaining = [];
+            swipeCount = 0;
             timerNum.textContent = 45;
             scoreNum.textContent = 0;
             urgencyEl.classList.remove('danger');

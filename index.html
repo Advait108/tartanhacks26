@@ -148,7 +148,7 @@
         color: transparent;
     }
 
-    #feedback {                                                                                      
+    #feedback {
         display:inline-block;
         padding: 0.625rem 1rem;
         border-radius: 999px;
@@ -158,10 +158,36 @@
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         box-shadow: 0 10px 22px rgba(0,0,0,.10), inset 0 1px 0 rgba(255,255,255,.65);
-        background: linear-gradient(180deg, 
+        background: linear-gradient(180deg,
             rgba(255, 255, 255, 0.8),
             rgba(235, 255, 236, 0.4));
-        color: rgba(115, 150, 115, 0.78);                                                                  
+        color: rgba(115, 150, 115, 0.78);
+        transition: box-shadow 0.3s ease;
+    }
+
+    #feedback.glow-green {
+        box-shadow: 0 0 24px rgba(0, 255, 100, 0.7), 0 0 8px rgba(0, 255, 100, 0.4), inset 0 1px 0 rgba(255,255,255,.65);
+    }
+
+    #feedback.glow-red {
+        box-shadow: 0 0 18px rgba(233, 69, 96, 0.6), 0 0 6px rgba(233, 69, 96, 0.3), inset 0 1px 0 rgba(255,255,255,.65);
+    }
+
+    /* +1 floating animation */
+    .plus-one {
+        position: fixed;
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: #2e7d32;
+        pointer-events: none;
+        z-index: 55;
+        animation: floatToScore 0.7s ease forwards;
+    }
+
+    @keyframes floatToScore {
+        0%   { opacity: 1; transform: translateY(0) scale(1.2); }
+        50%  { opacity: 1; transform: translateY(-30px) scale(1); }
+        100% { opacity: 0; transform: translateY(-50px) scale(0.6); }
     }
 
     
@@ -583,10 +609,11 @@
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
             osc.stop(audioCtx.currentTime + dur);
         }
-        function sndCorrect() { beep(660, 0.15); beep(880, 0.2); } // happy two-tone
-        function sndWrong() { beep(220, 0.25, 'square'); }          // low buzz
-        function sndMatch() { beep(520, 0.1); beep(660, 0.1); beep(880, 0.15); } // triple chime
+        function sndCorrect() { beep(523, 0.1); setTimeout(() => beep(659, 0.1), 80); setTimeout(() => beep(784, 0.15), 160); } // rising C-E-G major chord
+        function sndWrong() { beep(311, 0.2, 'sawtooth'); setTimeout(() => beep(233, 0.35, 'sawtooth'), 150); } // descending sad slide
+        function sndMatch() { beep(523, 0.08); setTimeout(() => beep(659, 0.08), 70); setTimeout(() => beep(784, 0.08), 140); setTimeout(() => beep(1047, 0.25), 210); } // triumphant C-E-G-C octave
 
+        //CARD LOGIC------------------------------------------------------
         let remaining = []; // items not yet shown this cycle
         let currItem = null;
         let binLabel = document.getElementById('binLabel'); //going into HTML and getting references to elements
@@ -594,9 +621,23 @@
         let cardName = document.getElementById('cardName');
         let cardTags = document.getElementById('cardTags');
 
+        const BIN_BIAS = 2; // items from player's bin are this many times more likely (1 = no bias, 3 = 3x more likely)
+
         function showNextItem() { //pick a random item and display it on the card
             if (remaining.length === 0) remaining = [...items]; // refill when all shown
-            let randomIndex = Math.floor(Math.random() * remaining.length);
+
+            // give each item a weight — matching bin items get BIN_BIAS, others get 1
+            let weights = remaining.map(item => item.bin === currBin ? BIN_BIAS : 1);
+            let totalWeight = weights.reduce((sum, w) => sum + w, 0); // add up all weights
+            let roll = Math.random() * totalWeight; // pick a random point in the total weight
+
+            // walk through items, subtracting each weight from roll until we land on one
+            let randomIndex = 0;
+            for (let i = 0; i < weights.length; i++) {
+                roll -= weights[i];
+                if (roll <= 0) { randomIndex = i; break; }
+            }
+
             currItem = remaining.splice(randomIndex, 1)[0]; // pick and remove from pool
             cardEmoji.textContent = currItem.emoji;
             cardName.textContent = currItem.name;
@@ -619,24 +660,42 @@
         let scoreNum = document.getElementById('scoreNum');//points to score number span
         // let streakNum = document.getElementById('streakNum');
 
+        function showPlusOne() { // spawn a +1 that floats up from the score chip
+            let el = document.createElement('div');
+            el.className = 'plus-one';
+            el.textContent = '+1';
+            let rect = scoreNum.getBoundingClientRect();
+            el.style.left = rect.left + 'px';
+            el.style.top = (rect.top - 10) + 'px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 700);
+        }
+
+        function glowFeedback(type) { // flash green or red glow on feedback pill
+            feedbackEl.classList.remove('glow-green', 'glow-red');
+            void feedbackEl.offsetWidth; // force reflow to restart if same class
+            feedbackEl.classList.add(type);
+            setTimeout(() => feedbackEl.classList.remove(type), 600);
+        }
+
         function perSwipe(swipedRight) {
             total++;
             let correct = (swipedRight === ((currItem.bin === currBin))); //check if the swipe direction matches the correct bin
             if (correct) {
                 score++;
                 correct_count++;
-                // streak++;
                 feedbackEl.textContent = 'Correct!';
-                navigator.vibrate?.(50); // haptic buzz on correct
+                navigator.vibrate?.(50);
+                glowFeedback('glow-green');
+                showPlusOne();
                 if (swipedRight) { showMatch(); sndMatch(); } else { sndCorrect(); }
             } else {
-                // streak = 0;
                 feedbackEl.textContent = 'Wrong! It was ' + currItem.bin + ' ' + binEmojis[currItem.bin];
-                navigator.vibrate?.([50, 30, 50]); // double buzz on wrong
+                navigator.vibrate?.([50, 30, 50]);
+                glowFeedback('glow-red');
                 sndWrong();
             }
             scoreNum.textContent = score;
-            // streakNum.textContent = streak;
             showNextItem();
         }
 
@@ -739,7 +798,7 @@
         let endScreen = document.getElementById('endScreen');
 
         function endGame() {
-            let accuracy = total > 0 ? Math.round((correct_count / total) * 100) : 0;
+            let accuracy = total > 0 ? Math.round((correct_count / items.length) * 100) : 0;
 
             // pick message based on accuracy
             if (accuracy > 32) {
@@ -751,7 +810,7 @@
             }
 
             document.getElementById('endScore').textContent = score;
-            document.getElementById('endAccuracy').textContent = correct_count + '/' + total + ' correct (' + accuracy + '%)';
+            document.getElementById('endAccuracy').textContent = correct_count + '/' + items.length + ' correct (' + accuracy + '%)';
             endScreen.classList.add('show');
         }
 

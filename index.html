@@ -74,6 +74,9 @@
     }
 
     #timer {
+        position: fixed;
+        top: 16px;
+        right: 20px;
         font-size: 2rem;
         font-weight: 900;
     }
@@ -108,9 +111,9 @@
 <body>
     <h1 id="app-title">Compost Cupid</h1>
     <p>You've been matched with a bin: swipe right on items that belong and left on the rest!</p>
+    <div id="timer">30</div>
     <div class="bar">
         <div>Bin: <span id="binLabel"></span></div>
-        <div id="timer">30</div>
         <div id="scoreDisplay">Score: 0 | Streak: 0</div>
     </div>
     <div id="card"> <!-- where the item is displayed -->
@@ -170,21 +173,7 @@
                 feedbackEl.textContent = 'Wrong! It was ' + currItem.bin;
             }
             scoreEl.textContent = 'Score: ' + score + ' | Streak: ' + streak;
-
-            // fly the card off screen, uncomment belo for fly off animation
-            /*
             showNextItem();
-            card.classList.add('animating');
-            let flyX = swipedRight ? 500 : -500;
-            card.style.transform = `translateX(${flyX}px) rotate(${flyX * 0.05}deg)`;
-            card.style.opacity = '0';
-
-            // after animation finishes, load next item
-            setTimeout(() => {
-                card.classList.remove('animating');
-                card.style.opacity = '1';
-                showNextItem();
-            }, 300);*/
         }
 
         let startX = 0;

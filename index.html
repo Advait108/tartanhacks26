@@ -580,7 +580,7 @@
                 <div class="start-step"><b>You will be assigned a waste bin</b></div>
                 <div class="start-step">👉 Swipe right if the item belongs in your bin</div>
                 <div class="start-step">👈 Swipe left if it doesn't</div>
-                <div class="start-step">⏱️ 60 seconds on the clock</div>
+                <div class="start-step">⏱️ 45 seconds on the clock</div>
             </div>
             <div class="start-btn" id="startBtn">Start Swiping</div>
         </div>
@@ -592,7 +592,7 @@
         <div class="chip"><span class="label">Bin:</span> <span class="value" id="binLabel"></span></div>
         <div class="chip"><span class="label">Score:</span> <span class="value" id="scoreNum">0</span></div>
         <!-- <div class="chip"><span class="label">Streak:</span> <span class="value" id="streakNum">0</span></div> -->
-        <div class="chip"><span class="label">Time:</span> <span class="value" id="timerNum">60</span></div>
+        <div class="chip"><span class="label">Time:</span> <span class="value" id="timerNum">45</span></div>
     </div>
 
     <div class="cardWrap">
@@ -857,7 +857,7 @@
         });
 
         //TIMER LOGIC------------------------------------------------------
-        let timeLeft = 60;
+        let timeLeft = 45;
         let timerNum = document.getElementById('timerNum');
         let urgencyEl = document.getElementById('urgency');
         let timerInterval = null;
@@ -912,9 +912,9 @@
             score = 0;
             total = 0;
             correct_count = 0;
-            timeLeft = 60;
+            timeLeft = 45;
             remaining = [];
-            timerNum.textContent = 60;
+            timerNum.textContent = 45;
             scoreNum.textContent = 0;
             urgencyEl.classList.remove('danger');
             endScreen.classList.remove('show');

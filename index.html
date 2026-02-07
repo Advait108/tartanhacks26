@@ -180,7 +180,7 @@
         position: fixed;
         font-size: 1.4rem;
         font-weight: 900;
-        color: #2e7d32;
+        color: #55e05c;
         pointer-events: none;
         z-index: 55;
         animation: floatToScore 0.7s ease forwards;
@@ -320,6 +320,16 @@
     .start-logo {
         font-size: 4rem;
         margin-bottom: 4px;
+                background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.98),
+            rgba(185, 255, 199, 0.942)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow:
+            0 .12rem .8rem rgba(0,0,0,.22),
+            0 0 .06rem rgba(255,255,255,.25);
     }
 
     .start-title {
@@ -384,7 +394,7 @@
         position: fixed;
         top: 0; left: 0;
         width: 100%; height: 100%;
-        background: rgba(69, 87, 69, 0.85);
+        background-image: linear-gradient(0deg, rgb(209, 236, 207), rgb(69, 87, 69));
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         display: flex;
@@ -402,7 +412,10 @@
     }
 
     .end-card {
-        background: rgba(255, 255, 255, 0.5);
+        background: linear-gradient(180deg,
+            rgba(255,255,255,.26),
+            rgba(255,255,255,.14)
+        );
         border-radius: 24px;
         padding: 40px 32px;
         text-align: center;
@@ -422,48 +435,77 @@
 
     .end-title {
         font-size: 1.15rem;
-        font-weight: 800;
-        color: rgb(93, 106, 91);
+        font-weight: 850;
         line-height: 1.35;
         max-width: 220px;
+        color: rgba(240, 255, 246, 0.88);
+        text-shadow: 0 .25rem 1rem rgba(0,0,0,.14);
+        letter-spacing: -0.01em;
     }
 
     .end-score {
         font-size: 4rem;
         font-weight: 900;
-        color: rgb(69, 87, 69);
         margin-top: 8px;
         line-height: 1;
+        background: linear-gradient(180deg,
+            rgba(255,255,255,.98),
+            rgba(185,255,199,.92)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow:
+            0 .14rem 1rem rgba(0,0,0,.16),
+            0 0 .06rem rgba(255,255,255,.25);
     }
 
     .end-label {
         font-size: 0.85rem;
-        font-weight: 600;
-        color: rgb(93, 106, 91);
-        letter-spacing: 0.05em;
+        font-weight: 750;
         text-transform: uppercase;
+        color: rgba(240, 255, 246, 0.62);
+        letter-spacing: .14em;
+        text-shadow: 0 .2rem .8rem rgba(0,0,0,.10);
     }
 
     .end-accuracy {
         margin-top: 10px;
         font-size: 0.85rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.9);
-        background: rgba(93, 106, 91, 0.5);
-        padding: 6px 14px;
+        font-weight: 750;
+        padding: 0.45rem 0.9rem;
         border-radius: 999px;
+        border: 1px solid rgba(255,255,255,.28);
+        background: linear-gradient(180deg,
+        rgba(255,255,255,.30),
+        rgba(255,255,255,.14)
+        );
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow:
+        0 .9rem 2.2rem rgba(0,0,0,.14),
+        inset 0 1px 0 rgba(255,255,255,.60);
+        color: rgba(240, 255, 246, 0.86);
+        text-shadow: 0 .2rem .9rem rgba(0,0,0,.12);
     }
 
     .end-btn {
         margin-top: 20px;
         padding: 14px 40px;
-        background: rgb(69, 87, 69);
-        color: white;
         border-radius: 999px;
         font-weight: 700;
         font-size: 1.05rem;
         cursor: pointer;
         transition: transform 0.15s;
+        background: linear-gradient(180deg,
+            rgba(255,255,255,.55),
+            rgba(235,255,236,.22)
+        );
+        border: 1px solid rgba(255,255,255,.32);
+        color: rgba(33, 44, 33, .82);
+        box-shadow:
+            0 1.2rem 2.6rem rgba(0,0,0,.16),
+            0 0 1.2rem rgba(185,255,199,.22),
     }
 
     .end-btn:active {
@@ -544,7 +586,7 @@
     </div>
 
     <!-- GAME SCREEN -->
-    <h1 class ="app-title">EcoHinge</h1>
+    <h1 class ="app-title">🌱 EcoHinge</h1>
     <div class="chips">
         <div class="chip"><span class="label">Bin:</span> <span class="value" id="binLabel"></span></div>
         <div class="chip"><span class="label">Score:</span> <span class="value" id="scoreNum">0</span></div>
